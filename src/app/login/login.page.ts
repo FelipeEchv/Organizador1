@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { ModalController } from '@ionic/angular';
 import { RecuperarPasswordComponent } from '../recuperar-password/recuperar-password.component';
+import { AuthService } from '../services/auth.service';
 
 @Component({
   selector: 'app-login',
@@ -16,21 +17,21 @@ export class LoginPage {
   mensajeVisible: boolean = false; // Mostrar mensaje de agradecimiento por 3 segundos
   isLoading: boolean = false; // Controla la visibilidad de la barra de progreso
 
-  constructor(private router: Router, private modalController: ModalController) {}
+  constructor(private router: Router, private modalController: ModalController, private authService: AuthService) {}
+
 
   login() {
-    this.isLoading = true; // Mostrar la barra de progreso
-  
-    setTimeout(() => { // Simular un proceso de validación
-      if (this.validarPassword(this.password)) {
-        // Navegar a la página de bienvenida pasando el nombre de usuario como parámetro
+    this.isLoading = true;
+
+    setTimeout(() => {
+      if (this.authService.login(this.usuario, this.password)) {
         this.router.navigate(['/bienvenida'], { queryParams: { usuario: this.usuario } });
       } else {
         alert('Usuario o contraseña no válidos.');
       }
-  
-      this.isLoading = false; // Ocultar la barra de progreso
-    }, 2000); // Simular un tiempo de validación de 2 segundos
+
+      this.isLoading = false;
+    }, 2000);
   }
 
   validarPassword(password: string): boolean {

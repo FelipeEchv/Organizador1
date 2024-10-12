@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-bienvenida',
@@ -9,17 +9,15 @@ import { Router, ActivatedRoute } from '@angular/router';
 export class BienvenidaPage implements OnInit {
   nombreUsuario: string = 'Invitado';
 
-  constructor(private route: ActivatedRoute, private router: Router) {}
+  constructor(private router: Router) {}
 
   ngOnInit() {
-    // Obtener el nombre del usuario desde los parámetros de la ruta
-    this.route.queryParams.subscribe(params => {
-      this.nombreUsuario = params['usuario'] || 'Invitado';
-    });
+    // Obtiene el nombre del usuario desde localStorage
+    this.nombreUsuario = localStorage.getItem('usuario') || 'Invitado';
   }
 
   logout() {
-    // Redirigir al login cuando se cierra la sesión
+    localStorage.removeItem('usuario');
     this.router.navigate(['/login']);
   }
 }
