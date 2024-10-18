@@ -17,36 +17,30 @@
       "sexo": "masculino"
     },
     {
-      "id": "fadf",
-      "nombre": "MateoE",
-      "password": "Mateo2018",
-      "correo": "mateo@gmail.com",
-      "edad": 22,
+      "id": "d454",
+      "nombre": "Jose",
+      "password": "jose1234",
+      "correo": "jose@gmail.com",
+      "edad": 30,
       "sexo": "masculino"
-    },
-    {
-      "id": "614c",
-      "nombre": "Stephanie",
-      "password": "hola1234",
-      "correo": "stephanie@gmail.com",
-      "edad": 24,
-      "sexo": "femenino"
     }
   ],
   "contactos": [
     {
       "id": "a890",
-      "nombre": "",
-      "telefono": "",
-      "email": ""
+      "nombre": "Juan",
+      "telefono": "456789",
+      "email": "felipe@felipe.com",
+      "userId": "2"
     }
   ],
   "notas": [
     {
       "id": "9e2e",
-      "titulo": "",
-      "contenido": "",
-      "fecha": ""
+      "titulo": "Hacer aseo",
+      "contenido": "adsdadasd",
+      "fecha": "2024-11-08",
+      "userId": "1"
     }
   ],
   "tareas": []

@@ -20,10 +20,15 @@ export class ContactosPage implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.contactosService.getContactos().subscribe(data => {
-      this.contactos = data;
-    });
+    const usuario = localStorage.getItem('usuario');  // Obtén el usuario del localStorage
+    if (usuario) {
+      const usuarioData = JSON.parse(usuario);  // Parsear el valor de 'usuario'
+      this.contactosService.getContactosByUserId(usuarioData.id).subscribe(contactos => {
+        this.contactos = contactos;  // Filtrar y obtener los contactos del usuario autenticado
+      });
+    }
   }
+  
 
   agregarContacto() {
     this.contactosService.addContacto(this.nuevoContacto).subscribe(data => {

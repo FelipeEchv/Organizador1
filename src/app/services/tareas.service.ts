@@ -6,27 +6,27 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class TareasService {
-
-  private apiUrl = 'http://localhost:3000/tareas'; // Ruta del json-server
+  private apiUrl = 'http://localhost:3000/tareas'; // Asegúrate de que esta URL sea la correcta para tu json-server
 
   constructor(private http: HttpClient) {}
 
-  // Obtener todas las tareas
-  getTareas(): Observable<any[]> {
-    return this.http.get<any[]>(this.apiUrl);
+  // Obtener las tareas del usuario autenticado
+  getTareasByUserId(userId: string): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}?userId=${userId}`);
   }
+  
 
   // Agregar una nueva tarea
   addTarea(tarea: any): Observable<any> {
     return this.http.post<any>(this.apiUrl, tarea);
   }
 
-  // Actualizar una tarea existente
+  // Actualizar una tarea
   updateTarea(tarea: any): Observable<any> {
     return this.http.put(`${this.apiUrl}/${tarea.id}`, tarea);
   }
 
-  // Eliminar una tarea por ID
+  // Eliminar una tarea
   deleteTarea(id: number): Observable<any> {
     return this.http.delete(`${this.apiUrl}/${id}`);
   }

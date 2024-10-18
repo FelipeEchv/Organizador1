@@ -19,10 +19,15 @@ export class TareasPage implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.tareasService.getTareas().subscribe(data => {
-      this.tareas = data;
-    });
+    const usuario = localStorage.getItem('usuario');  // Obtén el usuario del localStorage
+    if (usuario) {
+      const usuarioData = JSON.parse(usuario);  // Parsear el valor de 'usuario' para obtener el objeto
+      this.tareasService.getTareasByUserId(usuarioData.id).subscribe(tareas => {
+        this.tareas = tareas;  // Filtrar y obtener las tareas del usuario autenticado
+      });
+    }
   }
+  
 
   agregarTarea() {
     this.tareasService.addTarea(this.nuevaTarea).subscribe(data => {
@@ -50,6 +55,7 @@ export class TareasPage implements OnInit {
         {
           name: 'fecha',
           type: 'date',
+          placeholder: 'fecha',
           value: tarea.fecha
         },
         {

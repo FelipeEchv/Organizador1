@@ -19,10 +19,15 @@ export class NotasPage implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.notasService.getNotas().subscribe(data => {
-      this.notas = data;
-    });
+    const usuario = localStorage.getItem('usuario');  // Obtén el usuario del localStorage
+    if (usuario) {
+      const usuarioData = JSON.parse(usuario);  // Parsear el valor de 'usuario'
+      this.notasService.getNotasByUserId(usuarioData.id).subscribe(notas => {
+        this.notas = notas;  // Filtrar y obtener las notas del usuario autenticado
+      });
+    }
   }
+  
 
   agregarNota() {
     this.notasService.addNota(this.nuevaNota).subscribe(data => {
