@@ -3,12 +3,18 @@
     {
       "id": "1",
       "nombre": "IgnacioM",
-      "password": "Duoc2024"
+      "password": "Duoc2024",
+      "correo": "ignacio@gmail.com",
+      "edad": 22,
+      "sexo": "masculino"
     },
     {
       "id": "2",
       "nombre": "FelipeE",
-      "password": "Duoc2024"
+      "password": "Duoc2024",
+      "correo": "felipe@gmail.com",
+      "edad": 22,
+      "sexo": "masculino"
     },
     {
       "id": "fadf",
@@ -17,6 +23,14 @@
       "correo": "mateo@gmail.com",
       "edad": 22,
       "sexo": "masculino"
+    },
+    {
+      "id": "614c",
+      "nombre": "Stephanie",
+      "password": "hola1234",
+      "correo": "stephanie@gmail.com",
+      "edad": 24,
+      "sexo": "femenino"
     }
   ],
   "contactos": [
