@@ -1,68 +1,33 @@
-import { Component, AfterViewInit } from '@angular/core';
+import { Component } from '@angular/core';
+import { Usuarioservice } from '../services/usuarioservice.service';
 import { Router } from '@angular/router';
-import * as $ from 'jquery';
 
 @Component({
   selector: 'app-registro',
   templateUrl: './registro.page.html',
   styleUrls: ['./registro.page.scss'],
 })
-export class RegistroPage implements AfterViewInit {
+export class RegistroPage {
   nombre: string = '';
-  edad: number = 0;
+  password: string = '';
   correo: string = '';
+  edad: number = 0;
   sexo: string = '';
 
-  constructor(private router: Router) {}
-
-  ngAfterViewInit() {
-    this.applyJQueryValidations();
-  }
-
-  applyJQueryValidations() {
-    // Validar nombre: Solo letras y no vacío
-    $('#nombre').on('input', (event) => {
-      const valor = $(event.target).val() as string;
-      const nombreValido = /^[a-zA-Z\s]+$/.test(valor);
-      if (valor.trim() === '') {
-        $('#error-nombre').text('El nombre no puede estar vacío.').show();
-      } else if (!nombreValido) {
-        $('#error-nombre').text('El nombre solo puede contener letras.').show();
-      } else {
-        $('#error-nombre').hide();
-      }
-    });
-
-    // Validar edad: Solo números, máximo 2 dígitos y no vacío
-    $('#edad').on('input', (event) => {
-      const valor = $(event.target).val() as string;
-      const edadValida = /^\d{1,2}$/.test(valor);
-      if (valor.trim() === '') {
-        $('#error-edad').text('La edad no puede estar vacía.').show();
-      } else if (!edadValida) {
-        $('#error-edad').text('La edad debe ser un número de hasta 2 dígitos.').show();
-      } else {
-        $('#error-edad').hide();
-      }
-    });
-
-    // Validar correo: Formato válido de email y no vacío
-    $('#correo').on('input', (event) => {
-      const valor = $(event.target).val() as string;
-      const correoValido = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(valor);
-      if (valor.trim() === '') {
-        $('#error-correo').text('El correo no puede estar vacío.').show();
-      } else if (!correoValido) {
-        $('#error-correo').text('El formato de correo no es válido.').show();
-      } else {
-        $('#error-correo').hide();
-      }
-    });
-  }
+  constructor(private usuarioService: Usuarioservice, private router: Router) {}
 
   registrar() {
-    // Mostrar un mensaje de éxito si todo es válido
-    alert('Registro exitoso, se te ha enviado un correo de confirmación.');
-    this.router.navigate(['/login']);
+    const nuevoUsuario = {
+      nombre: this.nombre,
+      password: this.password, // Asegúrate de que la contraseña esté incluida
+      correo: this.correo,
+      edad: this.edad,
+      sexo: this.sexo
+    };
+
+    this.usuarioService.addUsuario(nuevoUsuario).subscribe(response => {
+      alert('Usuario registrado exitosamente');
+      this.router.navigate(['/login']);
+    });
   }
 }

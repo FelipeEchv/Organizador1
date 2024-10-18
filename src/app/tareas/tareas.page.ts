@@ -1,118 +1,85 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { TareasService } from '../services/tareas.service';
 import { AlertController } from '@ionic/angular';
-
-interface Tarea {
-  titulo: string;
-  contenido: string;
-  fecha: string; // La fecha será una cadena en formato 'YYYY-MM-DD'
-  prioridad: 'Bajo' | 'Medio' | 'Alto'; // Prioridad como texto
-}
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-tareas',
   templateUrl: './tareas.page.html',
   styleUrls: ['./tareas.page.scss'],
 })
-export class TareasPage {
-  tareas: Tarea[] = [];
+export class TareasPage implements OnInit {
+  tareas: any[] = [];
+  nuevaTarea = { titulo: '', descripcion: '', fecha: '', prioridad: 1 };
 
-  constructor(private alertController: AlertController) {}
+  constructor(
+    private tareasService: TareasService,
+    private alertController: AlertController,
+    private router: Router
+  ) {}
 
-  async agregarTarea() {
-    const alert = await this.alertController.create({
-      header: 'Nueva Tarea',
-      inputs: [
-        {
-          name: 'titulo',
-          type: 'text',
-          placeholder: 'Título'
-        },
-        {
-          name: 'contenido',
-          type: 'text',
-          placeholder: 'Contenido'
-        },
-        {
-          name: 'fecha',
-          type: 'date',
-          placeholder: 'Fecha'
-        },
-        {
-          name: 'prioridad',
-          type: 'text',
-          placeholder: 'Prioridad (Bajo, Medio, Alto)',
-          value: '' // Valor por defecto
-        }
-      ],
-      buttons: [
-        {
-          text: 'Cancelar',
-          role: 'cancel',
-        },
-        {
-          text: 'Agregar',
-          handler: (data: any) => {
-            const prioridades = ['Bajo', 'Medio', 'Alto'];
-            if (data.titulo && data.contenido && data.fecha && prioridades.includes(data.prioridad)) {
-              this.tareas.push({
-                titulo: data.titulo,
-                contenido: data.contenido,
-                fecha: data.fecha,
-                prioridad: data.prioridad
-              });
-            }
-          }
-        }
-      ]
+  ngOnInit() {
+    this.tareasService.getTareas().subscribe(data => {
+      this.tareas = data;
     });
-
-    await alert.present();
   }
 
-  async editarTarea(tarea: Tarea) {
+  agregarTarea() {
+    this.tareasService.addTarea(this.nuevaTarea).subscribe(data => {
+      this.tareas.push(data);
+      this.nuevaTarea = { titulo: '', descripcion: '', fecha: '', prioridad: 1 }; // Resetea el formulario
+    });
+  }
+
+  async editarTarea(tarea: any) {
     const alert = await this.alertController.create({
       header: 'Editar Tarea',
       inputs: [
         {
           name: 'titulo',
           type: 'text',
-          value: tarea.titulo,
-          placeholder: 'Título'
+          placeholder: 'Título',
+          value: tarea.titulo
         },
         {
-          name: 'contenido',
-          type: 'text',
-          value: tarea.contenido,
-          placeholder: 'Contenido'
+          name: 'descripcion',
+          type: 'textarea',
+          placeholder: 'Descripción',
+          value: tarea.descripcion
         },
         {
           name: 'fecha',
           type: 'date',
-          value: tarea.fecha,
-          placeholder: 'Fecha'
+          value: tarea.fecha
         },
         {
           name: 'prioridad',
-          type: 'text',
-          value: tarea.prioridad,
-          placeholder: 'Prioridad (Bajo, Medio, Alto)'
+          type: 'number',
+          placeholder: 'Prioridad',
+          value: tarea.prioridad
         }
       ],
       buttons: [
         {
           text: 'Cancelar',
-          role: 'cancel',
+          role: 'cancel'
         },
         {
           text: 'Guardar',
-          handler: (data: any) => {
-            const prioridades = ['Bajo', 'Medio', 'Alto'];
-            if (data.titulo && data.contenido && data.fecha && prioridades.includes(data.prioridad)) {
-              tarea.titulo = data.titulo;
-              tarea.contenido = data.contenido;
-              tarea.fecha = data.fecha;
-              tarea.prioridad = data.prioridad;
-            }
+          handler: (data) => {
+            const tareaEditada = {
+              id: tarea.id,
+              titulo: data.titulo,
+              descripcion: data.descripcion,
+              fecha: data.fecha,
+              prioridad: data.prioridad
+            };
+            this.tareasService.updateTarea(tareaEditada).subscribe(() => {
+              const index = this.tareas.findIndex(t => t.id === tarea.id);
+              if (index > -1) {
+                this.tareas[index] = tareaEditada;
+              }
+            });
           }
         }
       ]
@@ -121,10 +88,13 @@ export class TareasPage {
     await alert.present();
   }
 
-  eliminarTarea(tarea: Tarea) {
-    const index = this.tareas.indexOf(tarea);
-    if (index > -1) {
-      this.tareas.splice(index, 1);
-    }
+  eliminarTarea(id: number) {
+    this.tareasService.deleteTarea(id).subscribe(() => {
+      this.tareas = this.tareas.filter(tarea => tarea.id !== id); // Elimina correctamente la tarea
+    });
+  }
+
+  volverInicio() {
+    this.router.navigate(['/bienvenida']); // Cambia la ruta si es diferente
   }
 }

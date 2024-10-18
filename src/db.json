@@ -1,0 +1,39 @@
+{
+  "usuarios": [
+    {
+      "id": "1",
+      "nombre": "IgnacioM",
+      "password": "Duoc2024"
+    },
+    {
+      "id": "2",
+      "nombre": "FelipeE",
+      "password": "Duoc2024"
+    },
+    {
+      "id": "fadf",
+      "nombre": "MateoE",
+      "password": "Mateo2018",
+      "correo": "mateo@gmail.com",
+      "edad": 22,
+      "sexo": "masculino"
+    }
+  ],
+  "contactos": [
+    {
+      "id": "a890",
+      "nombre": "",
+      "telefono": "",
+      "email": ""
+    }
+  ],
+  "notas": [
+    {
+      "id": "9e2e",
+      "titulo": "",
+      "contenido": "",
+      "fecha": ""
+    }
+  ],
+  "tareas": []
+}

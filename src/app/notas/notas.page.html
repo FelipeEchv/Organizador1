@@ -1,33 +1,21 @@
 <ion-header>
-  <ion-toolbar color="primary">
+  <ion-toolbar>
     <ion-title>Notas</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content class="ion-padding">
-  <!-- Botón para agregar notas -->
-  <ion-button expand="full" (click)="agregarNota()">Añadir Nota</ion-button>
-  
-
-  <div class="note-container">
-    <ion-card *ngFor="let nota of notas" #notaElement>
-      <ion-card-header>
-        <ion-card-title>{{ nota.titulo }}</ion-card-title>
-        <ion-note>{{ nota.fecha | date: 'short' }}</ion-note>
-      </ion-card-header>
-
-      <ion-card-content>
+<ion-content>
+  <ion-list>
+    <ion-item *ngFor="let nota of notas">
+      <ion-label>
+        <h2>{{ nota.titulo }}</h2>
         <p>{{ nota.contenido }}</p>
-
-        <!-- Botones para editar y eliminar -->
-        <ion-button fill="outline" size="small" color="secondary" (click)="editarNota(nota)">Editar</ion-button>
-        <ion-button fill="outline" size="small" color="secondary" (click)="eliminarNota(nota.id)">Eliminar</ion-button>
-      </ion-card-content>
-    </ion-card>
-  </div>
-
-
-
-  <!-- Botón para volver a inicio -->
-  <ion-button expand="full" (click)="volverInicio()">Volver a Inicio</ion-button>
+        <p>Fecha: {{ nota.fecha }}</p>
+      </ion-label>
+      <ion-button fill="clear" (click)="editarNota(nota)">Editar</ion-button>
+      <ion-button fill="outline" color="danger" (click)="eliminarNota(nota.id)">Eliminar</ion-button>
+    </ion-item>
+  </ion-list>
+  <ion-button expand="full" (click)="agregarNota()">Añadir Nota</ion-button>
+  <ion-button expand="full" color="secondary" (click)="volverInicio()">Volver a Inicio</ion-button>
 </ion-content>

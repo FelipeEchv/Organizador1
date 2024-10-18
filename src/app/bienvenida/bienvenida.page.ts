@@ -12,8 +12,14 @@ export class BienvenidaPage implements OnInit {
   constructor(private router: Router) {}
 
   ngOnInit() {
-    // Obtiene el nombre del usuario desde localStorage
-    this.nombreUsuario = localStorage.getItem('usuario') || 'Invitado';
+    // Obtiene el usuario desde localStorage y lo parsea
+    const usuario = localStorage.getItem('usuario');
+    if (usuario) {
+      const usuarioData = JSON.parse(usuario); // Parsear la cadena JSON
+      this.nombreUsuario = usuarioData.nombre || 'Invitado'; // Extraer solo el nombre
+    } else {
+      this.nombreUsuario = 'Invitado';
+    }
   }
 
   logout() {

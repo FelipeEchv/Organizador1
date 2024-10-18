@@ -13,8 +13,8 @@ export class AuthGuard implements CanActivate {
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): boolean {
     
-    // Verifica si el usuario está autenticado
-    const isAuthenticated = localStorage.getItem('usuario'); // Puedes usar un servicio para manejar la autenticación
+    // Verifica si el usuario está autenticado verificando el localStorage
+    const isAuthenticated = localStorage.getItem('usuario'); 
     
     if (isAuthenticated) {
       return true; // Permite el acceso si el usuario está autenticado

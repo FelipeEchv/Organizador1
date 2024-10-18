@@ -1,116 +1,80 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { ContactosService } from '../services/contactos.service';
 import { AlertController } from '@ionic/angular';
+import { Router } from '@angular/router';
 
-interface Contacto {
-  nombre: string;
-  telefono: string;
-  direccion?: string; // Campo opcional
-  correo?: string;    // Campo opcional
-}
 
 @Component({
   selector: 'app-contactos',
   templateUrl: './contactos.page.html',
   styleUrls: ['./contactos.page.scss'],
 })
-export class ContactosPage {
-  contactos: Contacto[] = [];
+export class ContactosPage implements OnInit {
+  contactos: any[] = [];
+  nuevoContacto = { nombre: '', telefono: '', email: '' };
 
-  constructor(private alertController: AlertController) {}
+  constructor(
+    private contactosService: ContactosService,
+    private alertController: AlertController,
+    private router: Router,
+  ) {}
 
-  async agregarContacto() {
-    const alert = await this.alertController.create({
-      header: 'Nuevo Contacto',
-      inputs: [
-        {
-          name: 'nombre',
-          type: 'text',
-          placeholder: 'Nombre'
-        },
-        {
-          name: 'telefono',
-          type: 'text',
-          placeholder: 'Teléfono'
-        },
-        {
-          name: 'direccion',
-          type: 'text',
-          placeholder: 'Dirección'
-        },
-        {
-          name: 'correo',
-          type: 'email',
-          placeholder: 'Correo Electrónico'
-        }
-      ],
-      buttons: [
-        {
-          text: 'Cancelar',
-          role: 'cancel',
-        },
-        {
-          text: 'Agregar',
-          handler: (data: any) => {
-            this.contactos.push({
-              nombre: data.nombre,
-              telefono: data.telefono,
-              direccion: data.direccion,
-              correo: data.correo
-            } as Contacto);
-          }
-        }
-      ]
+  ngOnInit() {
+    this.contactosService.getContactos().subscribe(data => {
+      this.contactos = data;
     });
-
-    await alert.present();
   }
 
-  async editarContacto(contacto: Contacto) {
+  agregarContacto() {
+    this.contactosService.addContacto(this.nuevoContacto).subscribe(data => {
+      this.contactos.push(data);
+      this.nuevoContacto = { nombre: '', telefono: '', email: '' }; // Resetea el formulario
+    });
+  }
+
+  async editarContacto(contacto: any) {
     const alert = await this.alertController.create({
       header: 'Editar Contacto',
       inputs: [
         {
           name: 'nombre',
           type: 'text',
-          value: contacto.nombre,
-          placeholder: 'Nombre'
+          placeholder: 'Nombre',
+          value: contacto.nombre
         },
         {
           name: 'telefono',
           type: 'text',
-          value: contacto.telefono,
-          placeholder: 'Teléfono'
+          placeholder: 'Teléfono',
+          value: contacto.telefono
         },
         {
-          name: 'direccion',
-          type: 'text',
-          value: contacto.direccion || '', // Campo opcional
-          placeholder: 'Dirección'
-        },
-        {
-          name: 'correo',
+          name: 'email',
           type: 'email',
-          value: contacto.correo || '', // Campo opcional
-          placeholder: 'Correo Electrónico'
+          placeholder: 'Email',
+          value: contacto.email
         }
       ],
       buttons: [
         {
           text: 'Cancelar',
-          role: 'cancel',
+          role: 'cancel'
         },
         {
           text: 'Guardar',
-          handler: (data: any) => {
-            const index = this.contactos.indexOf(contacto);
-            if (index > -1) {
-              this.contactos[index] = {
-                nombre: data.nombre,
-                telefono: data.telefono,
-                direccion: data.direccion,
-                correo: data.correo
-              } as Contacto;
-            }
+          handler: (data) => {
+            const contactoEditado = {
+              id: contacto.id,
+              nombre: data.nombre,
+              telefono: data.telefono,
+              email: data.email
+            };
+            this.contactosService.updateContacto(contactoEditado).subscribe(() => {
+              const index = this.contactos.findIndex(c => c.id === contacto.id);
+              if (index > -1) {
+                this.contactos[index] = contactoEditado;
+              }
+            });
           }
         }
       ]
@@ -119,10 +83,14 @@ export class ContactosPage {
     await alert.present();
   }
 
-  eliminarContacto(contacto: Contacto) {
-    const index = this.contactos.indexOf(contacto);
-    if (index > -1) {
-      this.contactos.splice(index, 1);
-    }
+  eliminarContacto(id: number) {
+    this.contactosService.deleteContacto(id).subscribe(() => {
+      this.contactos = this.contactos.filter(contacto => contacto.id !== id);
+    });
   }
+
+  volverInicio() {
+    this.router.navigate(['/bienvenida']); // Cambia la ruta si es diferente
+  }
+
 }

@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { ModalController } from '@ionic/angular';
 import { RecuperarPasswordComponent } from '../recuperar-password/recuperar-password.component';
-import { AuthService } from '../services/auth.service';
+import { Usuarioservice } from '../services/usuarioservice.service';
 
 @Component({
   selector: 'app-login',
@@ -10,28 +10,31 @@ import { AuthService } from '../services/auth.service';
   styleUrls: ['./login.page.scss'],
 })
 export class LoginPage {
-  usuario: string = '';
+  nombre: string = '';
   password: string = '';
   rating: number = 0; // Calificación seleccionada
   hoveredRating: number = 0; // Calificación mientras se pasa el mouse
   mensajeVisible: boolean = false; // Mostrar mensaje de agradecimiento por 3 segundos
   isLoading: boolean = false; // Controla la visibilidad de la barra de progreso
 
-  constructor(private router: Router, private modalController: ModalController, private authService: AuthService) {}
+  constructor(private router: Router, private modalController: ModalController, private usuarioService: Usuarioservice) {}
 
-
-  login() {
-    this.isLoading = true;
-
-    setTimeout(() => {
-      if (this.authService.login(this.usuario, this.password)) {
-        this.router.navigate(['/bienvenida'], { queryParams: { usuario: this.usuario } });
+  iniciarSesion() {
+    this.usuarioService.getUsuarios().subscribe(usuarios => {
+      const usuarioEncontrado = usuarios.find(u => u.nombre === this.nombre && u.password === this.password);
+      if (usuarioEncontrado) {
+        alert('Inicio de sesión exitoso');
+        // Guardar el usuario en localStorage para que el AuthGuard lo reconozca como autenticado
+        localStorage.setItem('usuario', JSON.stringify(usuarioEncontrado));
+        
+        // Agregar un ligero retraso para mostrar el mensaje antes de la navegación
+        setTimeout(() => {
+          this.router.navigate(['/bienvenida']); // Navegar a la página de bienvenida
+        }, 500);
       } else {
-        alert('Usuario o contraseña no válidos.');
+        alert('Nombre de usuario o contraseña incorrectos');
       }
-
-      this.isLoading = false;
-    }, 2000);
+    });
   }
 
   validarPassword(password: string): boolean {
