@@ -1,0 +1,36 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>{{ modo === 'agregar' ? 'Añadir Tarea' : 'Editar Tarea' }}</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="cerrar()">Cerrar</ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-item>
+    <ion-label position="stacked">Título</ion-label>
+    <ion-input type="text" [(ngModel)]="titulo"></ion-input>
+  </ion-item>
+
+  <ion-item>
+    <ion-label position="stacked">Descripción</ion-label>
+    <ion-textarea [(ngModel)]="descripcion"></ion-textarea>
+  </ion-item>
+
+  <ion-item>
+    <ion-label position="stacked">Fecha</ion-label>
+    <ion-input type="date" [(ngModel)]="fecha"></ion-input>
+  </ion-item>
+
+  <ion-item>
+    <ion-label position="stacked">Prioridad</ion-label>
+    <ion-select [(ngModel)]="prioridad">
+      <ion-select-option value="1">Baja</ion-select-option>
+      <ion-select-option value="2">Media</ion-select-option>
+      <ion-select-option value="3">Alta</ion-select-option>
+    </ion-select>
+  </ion-item>
+
+  <ion-button expand="full" (click)="guardar()">Guardar</ion-button>
+</ion-content>

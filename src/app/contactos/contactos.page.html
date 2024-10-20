@@ -9,13 +9,13 @@
     <ion-item *ngFor="let contacto of contactos">
       <ion-label>
         <h2>{{ contacto.nombre }}</h2>
-        <p>{{ contacto.telefono }}</p>
-        <p>{{ contacto.email }}</p>
+        <p>{{ contacto.telefono }} - {{ contacto.direccion }}</p>
       </ion-label>
-      <ion-button fill="clear" (click)="editarContacto(contacto)">Editar</ion-button>
-      <ion-button fill="outline" color="danger" (click)="eliminarContacto(contacto.id)">Eliminar</ion-button>
+      <ion-button fill="clear" (click)="abrirModalEditar(contacto)">Editar</ion-button>
+      <ion-button fill="clear" color="danger" (click)="eliminarContacto(contacto.id)">Eliminar</ion-button>
     </ion-item>
   </ion-list>
-  <ion-button expand="full" (click)="agregarContacto()">Añadir Contacto</ion-button>
+
+  <ion-button expand="full" (click)="abrirModalAgregar()">Añadir Contacto</ion-button>
   <ion-button expand="full" color="secondary" (click)="volverInicio()">Volver a Inicio</ion-button>
 </ion-content>

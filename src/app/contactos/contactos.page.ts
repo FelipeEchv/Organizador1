@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { ContactosService } from '../services/contactos.service';
-import { AlertController } from '@ionic/angular';
+import { ContactoService } from '../services/contactos.service';
+import { ModalController } from '@ionic/angular';
 import { Router } from '@angular/router';
-
+import { ContactoModalPage } from '../contacto-modal/contacto-modal.page';  
 
 @Component({
   selector: 'app-contactos',
@@ -11,91 +11,49 @@ import { Router } from '@angular/router';
 })
 export class ContactosPage implements OnInit {
   contactos: any[] = [];
-  nuevoContacto = { nombre: '', telefono: '', email: '' };
 
   constructor(
-    private contactosService: ContactosService,
-    private alertController: AlertController,
-    private router: Router,
+    private contactoService: ContactoService,
+    private modalController: ModalController,
+    private router: Router
   ) {}
 
   ngOnInit() {
-    const usuario = localStorage.getItem('usuario');  // Obtén el usuario del localStorage
-    if (usuario) {
-      const usuarioData = JSON.parse(usuario);  // Parsear el valor de 'usuario'
-      this.contactosService.getContactosByUserId(usuarioData.id).subscribe(contactos => {
-        this.contactos = contactos;  // Filtrar y obtener los contactos del usuario autenticado
-      });
-    }
-  }
-  
-
-  agregarContacto() {
-    this.contactosService.addContacto(this.nuevoContacto).subscribe(data => {
-      this.contactos.push(data);
-      this.nuevoContacto = { nombre: '', telefono: '', email: '' }; // Resetea el formulario
-    });
+    this.obtenerContactos();
   }
 
-  async editarContacto(contacto: any) {
-    const alert = await this.alertController.create({
-      header: 'Editar Contacto',
-      inputs: [
-        {
-          name: 'nombre',
-          type: 'text',
-          placeholder: 'Nombre',
-          value: contacto.nombre
-        },
-        {
-          name: 'telefono',
-          type: 'text',
-          placeholder: 'Teléfono',
-          value: contacto.telefono
-        },
-        {
-          name: 'email',
-          type: 'email',
-          placeholder: 'Email',
-          value: contacto.email
-        }
-      ],
-      buttons: [
-        {
-          text: 'Cancelar',
-          role: 'cancel'
-        },
-        {
-          text: 'Guardar',
-          handler: (data) => {
-            const contactoEditado = {
-              id: contacto.id,
-              nombre: data.nombre,
-              telefono: data.telefono,
-              email: data.email
-            };
-            this.contactosService.updateContacto(contactoEditado).subscribe(() => {
-              const index = this.contactos.findIndex(c => c.id === contacto.id);
-              if (index > -1) {
-                this.contactos[index] = contactoEditado;
-              }
-            });
-          }
-        }
-      ]
-    });
-
-    await alert.present();
+  async obtenerContactos() {
+    this.contactos = await this.contactoService.obtenerContactos();
   }
 
-  eliminarContacto(id: number) {
-    this.contactosService.deleteContacto(id).subscribe(() => {
-      this.contactos = this.contactos.filter(contacto => contacto.id !== id);
+  async eliminarContacto(id: number) {
+    await this.contactoService.eliminarContacto(id);
+    this.obtenerContactos();  // Refrescar la lista de contactos
+  }
+
+  async abrirModalAgregar() {
+    const modal = await this.modalController.create({
+      component: ContactoModalPage,  // Referencia al componente del modal
+      componentProps: { modo: 'agregar' }
     });
+    modal.onDidDismiss().then(() => {
+      this.obtenerContactos();
+    });
+    return await modal.present();
+  }
+
+  async abrirModalEditar(contacto: any) {
+    const modal = await this.modalController.create({
+      component: ContactoModalPage,  // Referencia al componente del modal
+      componentProps: { modo: 'editar', contacto }
+    });
+    modal.onDidDismiss().then(() => {
+      this.obtenerContactos();
+    });
+    return await modal.present();
   }
 
   volverInicio() {
-    this.router.navigate(['/bienvenida']); // Cambia la ruta si es diferente
+    this.router.navigate(['/bienvenida']);
   }
-
 }

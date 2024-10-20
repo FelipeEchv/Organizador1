@@ -13,7 +13,19 @@ const routes: Routes = [
   {
     path: 'registro',
     loadChildren: () => import('./registro/registro.module').then( m => m.RegistroPageModule)
+  },  {
+    path: 'contacto-modal',
+    loadChildren: () => import('./contacto-modal/contacto-modal.module').then( m => m.ContactoModalPageModule)
+  },
+  {
+    path: 'nota-modal',
+    loadChildren: () => import('./nota-modal/nota-modal.module').then( m => m.NotaModalPageModule)
+  },
+  {
+    path: 'tarea-modal',
+    loadChildren: () => import('./tarea-modal/tarea-modal.module').then( m => m.TareaModalPageModule)
   }
+
 
 ];
 

@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { TareasService } from '../services/tareas.service';
-import { AlertController } from '@ionic/angular';
+import { TareaService } from '../services/tareas.service';
+import { ModalController } from '@ionic/angular';
 import { Router } from '@angular/router';
+import { TareaModalPage } from '../tarea-modal/tarea-modal.page';  // Importar el modal
 
 @Component({
   selector: 'app-tareas',
@@ -10,97 +11,49 @@ import { Router } from '@angular/router';
 })
 export class TareasPage implements OnInit {
   tareas: any[] = [];
-  nuevaTarea = { titulo: '', descripcion: '', fecha: '', prioridad: 1 };
 
   constructor(
-    private tareasService: TareasService,
-    private alertController: AlertController,
+    private tareaService: TareaService,
+    private modalController: ModalController,
     private router: Router
   ) {}
 
   ngOnInit() {
-    const usuario = localStorage.getItem('usuario');  // Obtén el usuario del localStorage
-    if (usuario) {
-      const usuarioData = JSON.parse(usuario);  // Parsear el valor de 'usuario' para obtener el objeto
-      this.tareasService.getTareasByUserId(usuarioData.id).subscribe(tareas => {
-        this.tareas = tareas;  // Filtrar y obtener las tareas del usuario autenticado
-      });
-    }
-  }
-  
-
-  agregarTarea() {
-    this.tareasService.addTarea(this.nuevaTarea).subscribe(data => {
-      this.tareas.push(data);
-      this.nuevaTarea = { titulo: '', descripcion: '', fecha: '', prioridad: 1 }; // Resetea el formulario
-    });
+    this.obtenerTareas();
   }
 
-  async editarTarea(tarea: any) {
-    const alert = await this.alertController.create({
-      header: 'Editar Tarea',
-      inputs: [
-        {
-          name: 'titulo',
-          type: 'text',
-          placeholder: 'Título',
-          value: tarea.titulo
-        },
-        {
-          name: 'descripcion',
-          type: 'textarea',
-          placeholder: 'Descripción',
-          value: tarea.descripcion
-        },
-        {
-          name: 'fecha',
-          type: 'date',
-          placeholder: 'fecha',
-          value: tarea.fecha
-        },
-        {
-          name: 'prioridad',
-          type: 'number',
-          placeholder: 'Prioridad',
-          value: tarea.prioridad
-        }
-      ],
-      buttons: [
-        {
-          text: 'Cancelar',
-          role: 'cancel'
-        },
-        {
-          text: 'Guardar',
-          handler: (data) => {
-            const tareaEditada = {
-              id: tarea.id,
-              titulo: data.titulo,
-              descripcion: data.descripcion,
-              fecha: data.fecha,
-              prioridad: data.prioridad
-            };
-            this.tareasService.updateTarea(tareaEditada).subscribe(() => {
-              const index = this.tareas.findIndex(t => t.id === tarea.id);
-              if (index > -1) {
-                this.tareas[index] = tareaEditada;
-              }
-            });
-          }
-        }
-      ]
-    });
-
-    await alert.present();
+  async obtenerTareas() {
+    this.tareas = await this.tareaService.obtenerTareas();
   }
 
-  eliminarTarea(id: number) {
-    this.tareasService.deleteTarea(id).subscribe(() => {
-      this.tareas = this.tareas.filter(tarea => tarea.id !== id); // Elimina correctamente la tarea
+  async eliminarTarea(id: number) {
+    await this.tareaService.eliminarTarea(id);
+    this.obtenerTareas();  // Refrescar la lista de tareas
+  }
+
+  async abrirModalAgregar() {
+    const modal = await this.modalController.create({
+      component: TareaModalPage,  // Referencia al componente del modal
+      componentProps: { modo: 'agregar' }
     });
+    modal.onDidDismiss().then(() => {
+      this.obtenerTareas();
+    });
+    return await modal.present();
+  }
+
+  async abrirModalEditar(tarea: any) {
+    const modal = await this.modalController.create({
+      component: TareaModalPage,  // Referencia al componente del modal
+      componentProps: { modo: 'editar', tarea }
+    });
+    modal.onDidDismiss().then(() => {
+      this.obtenerTareas();
+    });
+    return await modal.present();
   }
 
   volverInicio() {
-    this.router.navigate(['/bienvenida']); // Cambia la ruta si es diferente
+    this.router.navigate(['/bienvenida']);
   }
 }

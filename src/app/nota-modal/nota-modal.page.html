@@ -1,0 +1,27 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>{{ modo === 'agregar' ? 'Añadir Nota' : 'Editar Nota' }}</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="cerrar()">Cerrar</ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-item>
+    <ion-label position="stacked">Título</ion-label>
+    <ion-input type="text" [(ngModel)]="titulo"></ion-input>
+  </ion-item>
+
+  <ion-item>
+    <ion-label position="stacked">Contenido</ion-label>
+    <ion-textarea [(ngModel)]="contenido"></ion-textarea>
+  </ion-item>
+
+  <ion-item>
+    <ion-label position="stacked">Fecha</ion-label>
+    <ion-input type="date" [(ngModel)]="fecha"></ion-input>
+  </ion-item>
+
+  <ion-button expand="full" (click)="guardar()">Guardar</ion-button>
+</ion-content>

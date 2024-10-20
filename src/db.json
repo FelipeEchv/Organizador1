@@ -25,23 +25,7 @@
       "sexo": "masculino"
     }
   ],
-  "contactos": [
-    {
-      "id": "a890",
-      "nombre": "Juan",
-      "telefono": "456789",
-      "email": "felipe@felipe.com",
-      "userId": "2"
-    }
-  ],
-  "notas": [
-    {
-      "id": "9e2e",
-      "titulo": "Hacer aseo",
-      "contenido": "adsdadasd",
-      "fecha": "2024-11-08",
-      "userId": "1"
-    }
-  ],
+  "contactos": [],
+  "notas": [],
   "tareas": []
 }

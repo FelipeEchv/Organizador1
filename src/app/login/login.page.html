@@ -18,7 +18,6 @@
     
     <ion-button expand="full" type="submit" [disabled]="!loginForm.form.valid">Ingresar</ion-button>
 
-    <!-- Barra de progreso de Material Angular-->
     <mat-progress-bar *ngIf="isLoading" mode="indeterminate"></mat-progress-bar>
 
     <ion-button expand="end" fill="clear" (click)="openRecuperarPassword()">Olvidé mi contraseña</ion-button>
@@ -26,19 +25,13 @@
     <ion-button expand="end" fill="clear" (click)="openRegistro()">Registrate</ion-button>
   </form>
 
-  <!-- Mensaje de agradecimiento por la calificación-->
   <p *ngIf="mensajeVisible" class="mensaje-calificacion">Gracias por tu calificación de {{ rating }} estrella(s).</p>
 
-  <!-- Sistema de calificación -->
   <div class="calificacion-wrapper">
     <div class="calificacion">
       <p>Califica esta app</p>
       <div class="rating">
-        <ion-button fill="clear" 
-                    *ngFor="let star of [1, 2, 3, 4, 5]; let i = index"
-                    (click)="rate(star)"
-                    (mouseover)="setHoveredRating(star)"
-                    (mouseleave)="resetHoveredRating()">
+        <ion-button fill="clear" *ngFor="let star of [1, 2, 3, 4, 5]" (click)="rate(star)" (mouseover)="setHoveredRating(star)" (mouseleave)="resetHoveredRating()">
           <span [ngClass]="{'highlighted': star <= (hoveredRating || rating)}">★</span>
         </ion-button>
       </div>

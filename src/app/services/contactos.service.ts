@@ -1,33 +1,55 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { SqliteService } from './sqlite.service';
 
 @Injectable({
   providedIn: 'root'
 })
-export class ContactosService {
-  private apiUrl = 'http://localhost:3000/contactos'; 
+export class ContactoService {
+  private apiUrl = 'http://192.168.100.9:3000/contactos'; 
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private sqliteService: SqliteService) {}
 
-  // Obtener los contactos del usuario autenticado
-  getContactosByUserId(userId: string): Observable<any[]> {
-    return this.http.get<any[]>(`${this.apiUrl}?userId=${userId}`);
-  }
-  
-
-  // Agregar un nuevo contacto
-  addContacto(contacto: any): Observable<any> {
-    return this.http.post<any>(this.apiUrl, contacto);
+  // Agregar contacto
+  async agregarContacto(nombre: string, telefono: string, direccion: string) {
+    if (this.tieneConexion()) {
+      return this.http.post(this.apiUrl, { nombre, telefono, direccion }).toPromise();
+    } else {
+      return this.sqliteService.addContact(nombre, telefono, direccion);
+    }
   }
 
-  // Actualizar un contacto
-  updateContacto(contacto: any): Observable<any> {
-    return this.http.put(`${this.apiUrl}/${contacto.id}`, contacto);
+  // Obtener contactos
+  async obtenerContactos(): Promise<any[]> {
+    if (this.tieneConexion()) {
+      const contactos = await this.http.get<any[]>(this.apiUrl).toPromise();
+      return contactos || [];
+    } else {
+      const contactos = await this.sqliteService.getContacts();
+      return contactos || [];
+    }
   }
 
-  // Eliminar un contacto
-  deleteContacto(id: number): Observable<any> {
-    return this.http.delete(`${this.apiUrl}/${id}`);
+  // Actualizar contacto
+  async actualizarContacto(id: number, nombre: string, telefono: string, direccion: string) {
+    if (this.tieneConexion()) {
+      return this.http.put(`${this.apiUrl}/${id}`, { nombre, telefono, direccion }).toPromise();
+    } else {
+      return this.sqliteService.updateContact(id, nombre, telefono, direccion);
+    }
+  }
+
+  // Eliminar contacto
+  async eliminarContacto(id: number) {
+    if (this.tieneConexion()) {
+      return this.http.delete(`${this.apiUrl}/${id}`).toPromise();
+    } else {
+      return this.sqliteService.deleteContact(id);
+    }
+  }
+
+  // Verificar si hay conexión a internet
+  tieneConexion(): boolean {
+    return window.navigator.onLine;
   }
 }

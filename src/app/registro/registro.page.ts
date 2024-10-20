@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { Usuarioservice } from '../services/usuarioservice.service';
+import { UsuarioService } from '../services/usuarioservice.service';  // Nota: Mayúscula inicial en UsuarioService
 import { Router } from '@angular/router';
 
 @Component({
@@ -14,20 +14,24 @@ export class RegistroPage {
   edad: number = 0;
   sexo: string = '';
 
-  constructor(private usuarioService: Usuarioservice, private router: Router) {}
+  constructor(private usuarioService: UsuarioService, private router: Router) {}  // Uso de UsuarioService
 
-  registrar() {
+  async registrar() {
     const nuevoUsuario = {
       nombre: this.nombre,
-      password: this.password, // Asegúrate de que la contraseña esté incluida
+      password: this.password,
       correo: this.correo,
       edad: this.edad,
       sexo: this.sexo
     };
 
-    this.usuarioService.addUsuario(nuevoUsuario).subscribe(response => {
+    try {
+      await this.usuarioService.agregarUsuario(nuevoUsuario);  // Uso del método agregarUsuario del servicio
       alert('Usuario registrado exitosamente');
       this.router.navigate(['/login']);
-    });
+    } catch (error) {
+      console.error('Error al registrar usuario:', error);
+      alert('Hubo un error al registrar el usuario. Inténtalo nuevamente.');
+    }
   }
 }

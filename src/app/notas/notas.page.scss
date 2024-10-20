@@ -1,41 +1,16 @@
-/* Fondo de la página */
+/* Estilos para la página de contactos */
 ion-content {
-  --background: url('/assets/img/notas.jpg') no-repeat center center / cover; 
-  height: 100vh; /* Altura completa de la vista */
-  width: 100vw;  /* Ancho completo de la vista */
+  --background: url('/assets/img/contactos.jpg') no-repeat center center / cover;
+  height: 100vh;
+  width: 100vw;
 }
 
-/* Contenedor de las notas */
-.note-container {
-  display: flex;
-  flex-wrap: wrap;  /* Permitir que las notas se acomoden en varias filas si es necesario */
-  justify-content: space-around; /* Espacio uniforme alrededor de las notas */ 
-}
-
-.note-item {
-  margin-bottom: 8px;
-}
-
-/* Estilo de cada nota (ion-card) */
-ion-card {
-  width: 200px;   /* Ancho de cada tarjeta de nota */
-  margin: 10px;   /* Espacio entre las notas */
-  background-color: rgb(66, 137, 7);  /* Fondo blanco con un poco de transparencia */
-  box-shadow: 0 4px 8px rgba(8, 8, 8, 0.1);  /* Sombra ligera alrededor de la nota */
-  border-radius: 10px;  /* Bordes redondeados */
-}
-
-/* Estilo para la fecha en las notas */
-ion-note {
-  font-size: 12px; /* Tamaño pequeño para las fechas */
-  color: rgb(0, 0, 0);     /* Texto gris para que sea menos prominente */
-}
-
-ion-card-content {
-  color: rgb(0, 0, 0);
-}
-
-ion-card-title {
-  font-size: medium;
-  color: rgb(0, 0, 0)
-}
+.contactos-container {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .contacto-item {
+    margin-bottom: 8px;
+  }
+  

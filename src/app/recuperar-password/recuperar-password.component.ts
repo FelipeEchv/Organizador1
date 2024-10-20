@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { ModalController } from '@ionic/angular';
-import { HttpClient } from '@angular/common/http';
+import { UsuarioService } from '../services/usuarioservice.service'; 
 
 @Component({
   selector: 'app-recuperar-password',
@@ -11,38 +11,36 @@ export class RecuperarPasswordComponent {
   usuario: string = '';
   email: string = '';
 
-  constructor(private modalController: ModalController, private http: HttpClient) {}
+  constructor(private modalController: ModalController, private usuarioService: UsuarioService) {}
 
   close() {
     this.modalController.dismiss();
   }
 
-  recuperar() {
+  async recuperar() {
     if (!this.emailValido()) {
       alert('Por favor, introduzca un correo electrónico válido.');
       return;
     }
 
-    // Realizar la consulta a la base de datos (db.json)
-    this.http.get<any[]>('http://localhost:3000/usuarios').subscribe(usuarios => {
+    try {
+      const usuarios = await this.usuarioService.obtenerUsuarios();
       const usuarioEncontrado = usuarios.find(u => u.nombre === this.usuario && u.correo === this.email);
 
       if (usuarioEncontrado) {
-        // Si se encuentra el usuario y correo
         alert('Se ha enviado un enlace para recuperar la contraseña a ' + this.email);
         this.close();
       } else {
-        // Si no se encuentran los datos
         alert('No se ha encontrado el usuario o correo proporcionado.');
       }
-    }, error => {
+    } catch (error) {
       console.error('Error al consultar la base de datos', error);
       alert('Hubo un error al intentar recuperar la contraseña. Inténtelo más tarde.');
-    });
+    }
   }
 
   emailValido(): boolean {
-    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Expresión regular para validar email
+    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return regex.test(this.email);
   }
 }
