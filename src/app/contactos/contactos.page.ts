@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ContactoService } from '../services/contactos.service';
+import { ContactosService } from '../services/contactos.service';
 import { ModalController } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { ContactoModalPage } from '../contacto-modal/contacto-modal.page';  
@@ -13,7 +13,7 @@ export class ContactosPage implements OnInit {
   contactos: any[] = [];
 
   constructor(
-    private contactoService: ContactoService,
+    private contactoService: ContactosService,
     private modalController: ModalController,
     private router: Router
   ) {}

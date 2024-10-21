@@ -10,9 +10,31 @@ export class SqliteService {
 
   constructor() {}
 
+  // Verificar la disponibilidad de jeep-sqlite en el DOM
+  private async ensureJeepSqliteIsAvailable(): Promise<void> {
+    return new Promise((resolve, reject) => {
+      const checkJeepSqliteInterval = setInterval(() => {
+        const jeepSqlite = document.querySelector('jeep-sqlite');
+        if (jeepSqlite) {
+          clearInterval(checkJeepSqliteInterval);  // Detener el chequeo cuando esté disponible
+          resolve();
+        }
+      }, 100);  // Revisar cada 100ms
+
+      // Rechazar si no se encuentra en 5 segundos
+      setTimeout(() => {
+        clearInterval(checkJeepSqliteInterval);
+        reject(new Error('El elemento jeep-sqlite no está presente en el DOM'));
+      }, 5000);
+    });
+  }
+
   // Inicializar la base de datos
   async initializeDatabase(): Promise<void> {
     try {
+      // Verificar si jeep-sqlite está disponible en el DOM antes de continuar
+      await this.ensureJeepSqliteIsAvailable();
+
       // Crea una instancia de SQLiteConnection
       this.sqliteConnection = new SQLiteConnection(CapacitorSQLite);
 
@@ -38,12 +60,15 @@ export class SqliteService {
   private async createTables(): Promise<void> {
     if (this.db) {
       const createUserTable = `
-        CREATE TABLE IF NOT EXISTS user (
-          id INTEGER PRIMARY KEY AUTOINCREMENT,
-          name TEXT,
-          email TEXT
-        );
-      `;
+  CREATE TABLE IF NOT EXISTS user (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT,
+    email TEXT,
+    password TEXT,
+    age INTEGER,
+    sex TEXT
+  ); 
+`;
       const createContactTable = `
         CREATE TABLE IF NOT EXISTS contact (
           id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -91,11 +116,11 @@ export class SqliteService {
   }
 
   // CRUD para Usuarios
-  async addUser(name: string, email: string): Promise<void> {
+  async addUser(name: string, email: string, password: string, edad: number, sexo: string): Promise<void> {
     await this.ensureDbIsOpen();
-    const query = `INSERT INTO user (name, email) VALUES (?, ?)`;
+    const query = `INSERT INTO user (name, email, password, edad, sexo) VALUES (?, ?, ?. ?, ?)`;
     try {
-      await this.db?.run(query, [name, email]);
+      await this.db?.run(query, [name, email, password, edad, sexo]);
       console.log('Usuario agregado con éxito');
     } catch (error) {
       console.error('Error al agregar usuario:', error);
@@ -114,9 +139,9 @@ export class SqliteService {
     }
   }
 
-  async updateUser(id: number, name: string, email: string): Promise<void> {
-    const query = `UPDATE user SET name = ?, email = ? WHERE id = ?`;
-    await this.db?.run(query, [name, email, id]);
+  async updateUser(id: number, name: string, email: string, password: string, edad: number, sexo: string): Promise<void> {
+    const query = `UPDATE user SET name = ?, email = ?, password = ?, edad = ?, sexo = ?, WHERE id = ?`;
+    await this.db?.run(query, [name, email, id, password, edad, sexo]);
   }
 
   async deleteUser(id: number): Promise<void> {

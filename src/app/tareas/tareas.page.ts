@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { TareaService } from '../services/tareas.service';
+import { TareasService } from '../services/tareas.service';
 import { ModalController } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { TareaModalPage } from '../tarea-modal/tarea-modal.page';  // Importar el modal
@@ -13,7 +13,7 @@ export class TareasPage implements OnInit {
   tareas: any[] = [];
 
   constructor(
-    private tareaService: TareaService,
+    private tareaService: TareasService,
     private modalController: ModalController,
     private router: Router
   ) {}

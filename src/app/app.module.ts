@@ -15,12 +15,15 @@ import { HttpClientModule } from '@angular/common/http';
 
 import { FormsModule } from '@angular/forms'; 
 
+import { IndexedDBService } from './services/indexeddb.service'; 
+import { SqliteService } from './services/sqlite.service';
+import { ConnectivityService } from './services/connectivity.service';
 
 
 @NgModule({
   declarations: [AppComponent],
   imports: [BrowserModule, IonicModule.forRoot(), AppRoutingModule, MatButtonModule, MatProgressBarModule, FormsModule,HttpClientModule], 
-  providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy }, provideAnimationsAsync()],
+  providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy },  IndexedDBService, SqliteService, ConnectivityService, provideAnimationsAsync()],
   bootstrap: [AppComponent],
   
 })

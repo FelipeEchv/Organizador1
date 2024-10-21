@@ -1,55 +1,72 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { Platform } from '@ionic/angular';
+import { IndexedDBService } from './indexeddb.service';
 import { SqliteService } from './sqlite.service';
-
+import { ConnectivityService } from './connectivity.service';
+ 
 @Injectable({
   providedIn: 'root'
 })
-export class NotaService {
-  private apiUrl = 'http://192.168.100.9:3000/notas'; 
+export class NotasService {
+  private apiUrl = 'http://localhost:3000/notas';
+  private isWeb: boolean;
 
-  constructor(private http: HttpClient, private sqliteService: SqliteService) {}
+  constructor(
+    private http: HttpClient,
+    private platform: Platform,
+    private sqliteService: SqliteService,
+    private indexedDBService: IndexedDBService,
+    private connectivityService: ConnectivityService
+  ) {
+    this.isWeb = this.platform.is('desktop') || this.platform.is('mobileweb');
+  }
 
-  // Agregar nota
-  async agregarNota(titulo: string, contenido: string, fecha: string) {
-    if (this.tieneConexion()) {
-      return this.http.post(this.apiUrl, { titulo, contenido, fecha }).toPromise();
+  async agregarNota(nota: { titulo: string, contenido: string, fecha: string }) {
+    const tieneConexion = await this.connectivityService.tieneConexionConServer();
+
+    if (tieneConexion) {
+      return this.http.post(this.apiUrl, nota).toPromise();
+    } else if (this.isWeb) {
+      return this.indexedDBService.addNote(nota);
     } else {
-      return this.sqliteService.addNote(titulo, contenido, fecha);
+      return this.sqliteService.addNote(nota.titulo, nota.contenido, nota.fecha);
     }
   }
 
-  // Obtener notas
-  async obtenerNotas(): Promise<any[]> {
-    if (this.tieneConexion()) {
-      const notas = await this.http.get<any[]>(this.apiUrl).toPromise();
-      return notas || [];
+  async obtenerNotas() {
+    const tieneConexion = await this.connectivityService.tieneConexionConServer();
+
+    if (tieneConexion) {
+      return this.http.get<any[]>(this.apiUrl).toPromise();
+    } else if (this.isWeb) {
+      return this.indexedDBService.getNotes();
     } else {
-      const notas = await this.sqliteService.getNotes();
-      return notas || [];
+      return this.sqliteService.getNotes();
     }
   }
 
-  // Actualizar nota
-  async actualizarNota(id: number, titulo: string, contenido: string, fecha: string) {
-    if (this.tieneConexion()) {
-      return this.http.put(`${this.apiUrl}/${id}`, { titulo, contenido, fecha }).toPromise();
+  async actualizarNota(id: number, nota: { titulo: string, contenido: string, fecha: string }) {
+    const tieneConexion = await this.connectivityService.tieneConexionConServer();
+
+    if (tieneConexion) {
+      return this.http.put(`${this.apiUrl}/${id}`, nota).toPromise();
+    } else if (this.isWeb) {
+      return this.indexedDBService.updateNote(id, nota);
     } else {
-      return this.sqliteService.updateNote(id, titulo, contenido, fecha);
+      return this.sqliteService.updateNote(id, nota.titulo, nota.contenido, nota.fecha);
     }
   }
 
-  // Eliminar nota
   async eliminarNota(id: number) {
-    if (this.tieneConexion()) {
+    const tieneConexion = await this.connectivityService.tieneConexionConServer();
+
+    if (tieneConexion) {
       return this.http.delete(`${this.apiUrl}/${id}`).toPromise();
+    } else if (this.isWeb) {
+      return this.indexedDBService.deleteNote(id);
     } else {
       return this.sqliteService.deleteNote(id);
     }
-  }
-
-  // Verificar si hay conexión a internet
-  tieneConexion(): boolean {
-    return window.navigator.onLine;
   }
 }

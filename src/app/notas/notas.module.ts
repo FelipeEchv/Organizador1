@@ -14,7 +14,7 @@ import { NotasPage } from './notas.page';
     CommonModule,
     FormsModule,
     IonicModule,
-    NotasPageRoutingModule
+    NotasPageRoutingModule,
   ],
   declarations: [NotasPage]
 })

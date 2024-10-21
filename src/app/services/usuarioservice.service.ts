@@ -1,58 +1,72 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { Platform } from '@ionic/angular';
+import { IndexedDBService } from './indexeddb.service';
 import { SqliteService } from './sqlite.service';
+import { ConnectivityService } from './connectivity.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UsuarioService {
-  private apiUrl = 'http://192.168.100.9:3000/usuarios'; 
-  constructor(private http: HttpClient, private sqliteService: SqliteService) {}
+  private apiUrl = 'http://localhost:3000/usuarios';
+  private isWeb: boolean;
 
-  // Agregar usuario
+  constructor(
+    private http: HttpClient,
+    private platform: Platform,
+    private sqliteService: SqliteService,
+    private indexedDBService: IndexedDBService,
+    private connectivityService: ConnectivityService
+  ) {
+    this.isWeb = this.platform.is('desktop') || this.platform.is('mobileweb');
+  }
+
   async agregarUsuario(usuario: { nombre: string, password: string, correo: string, edad: number, sexo: string }) {
-    if (this.tieneConexion()) {
-      // Enviar el objeto usuario completo al json-server
+    const tieneConexion = await this.connectivityService.tieneConexionConServer();
+
+    if (tieneConexion) {
       return this.http.post(this.apiUrl, usuario).toPromise();
+    } else if (this.isWeb) {
+      return this.indexedDBService.addUser(usuario);
     } else {
-      // Guardar en SQLite
-      return this.sqliteService.addUser(usuario.nombre, usuario.correo);
+      return this.sqliteService.addUser(usuario.nombre, usuario.correo, usuario.password, usuario.edad, usuario.sexo);
     }
   }
 
-  // Obtener usuarios
-  async obtenerUsuarios(): Promise<any[]> {
-    if (this.tieneConexion()) {
-      const usuarios = await this.http.get<any[]>(this.apiUrl).toPromise();
-      return usuarios || [];
+  async obtenerUsuarios() {
+    const tieneConexion = await this.connectivityService.tieneConexionConServer();
+
+    if (tieneConexion) {
+      return this.http.get<any[]>(this.apiUrl).toPromise();
+    } else if (this.isWeb) {
+      return this.indexedDBService.getUsers();
     } else {
-      const usuarios = await this.sqliteService.getUsers();
-      return usuarios || [];
+      return this.sqliteService.getUsers();
     }
   }
 
-  // Actualizar usuario
-  async actualizarUsuario(id: number, usuario: { nombre: string, correo: string }) {
-    if (this.tieneConexion()) {
-      // Enviar actualización al json-server
+  async actualizarUsuario(id: number, usuario: { nombre: string, password: string, correo: string, edad: number, sexo: string }) {
+    const tieneConexion = await this.connectivityService.tieneConexionConServer();
+
+    if (tieneConexion) {
       return this.http.put(`${this.apiUrl}/${id}`, usuario).toPromise();
+    } else if (this.isWeb) {
+      return this.indexedDBService.updateUser(id, usuario);
     } else {
-      // Actualizar en SQLite
-      return this.sqliteService.updateUser(id, usuario.nombre, usuario.correo);
+      return this.sqliteService.updateUser(id, usuario.nombre, usuario.correo, usuario.password, usuario.edad, usuario.sexo);
     }
   }
 
-  // Eliminar usuario
   async eliminarUsuario(id: number) {
-    if (this.tieneConexion()) {
+    const tieneConexion = await this.connectivityService.tieneConexionConServer();
+
+    if (tieneConexion) {
       return this.http.delete(`${this.apiUrl}/${id}`).toPromise();
+    } else if (this.isWeb) {
+      return this.indexedDBService.deleteUser(id);
     } else {
       return this.sqliteService.deleteUser(id);
     }
-  }
-
-  // Verificar si hay conexión a internet
-  tieneConexion(): boolean {
-    return window.navigator.onLine;
   }
 }

@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { ModalController } from '@ionic/angular';
-import { TareaService } from '../services/tareas.service';
+import { TareasService } from '../services/tareas.service';
 
 @Component({
   selector: 'app-tarea-modal',
@@ -18,7 +18,7 @@ export class TareaModalPage {
 
   constructor(
     private modalController: ModalController,
-    private tareaService: TareaService
+    private tareaService: TareasService
   ) {}
 
   ngOnInit() {
@@ -32,9 +32,11 @@ export class TareaModalPage {
 
   async guardar() {
     if (this.modo === 'agregar') {
-      await this.tareaService.agregarTarea(this.titulo, this.descripcion, this.fecha, this.prioridad);
+      // Pasamos todas las propiedades requeridas
+      await this.tareaService.agregarTarea({ titulo: this.titulo, descripcion: this.descripcion, fecha: this.fecha, prioridad: this.prioridad });
     } else {
-      await this.tareaService.actualizarTarea(this.tarea.id, this.titulo, this.descripcion, this.fecha, this.prioridad);
+      // Pasamos todas las propiedades requeridas para la actualización
+      await this.tareaService.actualizarTarea(this.tarea.id, { titulo: this.titulo, descripcion: this.descripcion, fecha: this.fecha, prioridad: this.prioridad });
     }
     this.modalController.dismiss();
   }

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { NotaService } from '../services/notas.service';
+import { NotasService } from '../services/notas.service';
 import { ModalController } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { NotaModalPage } from '../nota-modal/nota-modal.page'; 
@@ -13,7 +13,7 @@ export class NotasPage implements OnInit {
   notas: any[] = [];
 
   constructor(
-    private notaService: NotaService,
+    private notaService: NotasService,
     private modalController: ModalController,
     private router: Router
   ) {}

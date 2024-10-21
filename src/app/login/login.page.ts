@@ -22,7 +22,7 @@ export class LoginPage {
   async iniciarSesion() {
     this.isLoading = true;
     const usuarios = await this.usuarioService.obtenerUsuarios();
-    const usuarioEncontrado = usuarios.find(u => u.nombre === this.nombre && u.password === this.password);
+    const usuarioEncontrado = usuarios.find((u: any) => u.nombre === this.nombre && u.password === this.password);
 
     if (usuarioEncontrado) {
       alert('Inicio de sesión exitoso');

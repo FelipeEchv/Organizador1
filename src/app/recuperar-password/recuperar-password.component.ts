@@ -25,7 +25,7 @@ export class RecuperarPasswordComponent {
 
     try {
       const usuarios = await this.usuarioService.obtenerUsuarios();
-      const usuarioEncontrado = usuarios.find(u => u.nombre === this.usuario && u.correo === this.email);
+      const usuarioEncontrado = usuarios.find((u: any) => u.nombre === this.usuario && u.correo === this.email);
 
       if (usuarioEncontrado) {
         alert('Se ha enviado un enlace para recuperar la contraseña a ' + this.email);

@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { ModalController } from '@ionic/angular';
-import { NotaService } from '../services/notas.service';
+import { NotasService } from '../services/notas.service';
 
 @Component({
   selector: 'app-nota-modal',
@@ -17,7 +17,7 @@ export class NotaModalPage {
 
   constructor(
     private modalController: ModalController,
-    private notaService: NotaService
+    private notaService: NotasService
   ) {}
 
   ngOnInit() {
@@ -30,9 +30,11 @@ export class NotaModalPage {
 
   async guardar() {
     if (this.modo === 'agregar') {
-      await this.notaService.agregarNota(this.titulo, this.contenido, this.fecha);
+      // Cambiar de 4 argumentos a 3, eliminando 'autor'
+      await this.notaService.agregarNota({ titulo: this.titulo, contenido: this.contenido, fecha: this.fecha });
     } else {
-      await this.notaService.actualizarNota(this.nota.id, this.titulo, this.contenido, this.fecha);
+      // Cambiar de 5 argumentos a 3, eliminando 'autor'
+      await this.notaService.actualizarNota(this.nota.id, { titulo: this.titulo, contenido: this.contenido, fecha: this.fecha });
     }
     this.modalController.dismiss();
   }
