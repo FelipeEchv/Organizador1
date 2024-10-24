@@ -10,11 +10,18 @@
     <!-- Nombre Completo -->
     <ion-label position="floating">Nombre Completo</ion-label>
     <ion-item>   
-      <ion-input id="nombre" type="text" [(ngModel)]="nombre" name="nombre" required></ion-input>
+      <ion-input id="nombre" type="text" [(ngModel)]="nombreUsuario" name="nombre" required></ion-input>
     </ion-item>
     <!-- Mensaje de error para Nombre -->
     <p id="error-nombre" style="color: red; font-size: 12px; display: none;">El nombre solo puede contener letras y no puede estar vacío.</p>
 
+    <!-- Contraseña -->
+    <ion-label position="floating">Contraseña</ion-label>
+    <ion-item>
+      <ion-input id="password" type="password" [(ngModel)]="password" name="password" required></ion-input>
+    </ion-item>
+    <!-- Mensaje de error para Contraseña -->
+    <p id="error-password" style="color: red; font-size: 12px; display: none;">La contraseña debe tener al menos 8 caracteres, una letra mayúscula y un número.</p>
     
     <!-- Correo Electrónico -->
     <ion-label position="floating">Correo Electrónico</ion-label>
@@ -32,14 +39,13 @@
     <!-- Mensaje de error para Edad -->
     <p id="error-edad" style="color: red; font-size: 12px; display: none;">La edad debe ser un número de hasta 2 dígitos y no puede estar vacío.</p>
 
-
     <!-- Sexo -->
     <ion-item class="label1">
       <ion-label>Sexo</ion-label>
       <ion-select [(ngModel)]="sexo" name="sexo" required>
-        <ion-select-option value="hombre">Hombre</ion-select-option>
-        <ion-select-option value="mujer">Mujer</ion-select-option>
-        <ion-select-option value="?">?</ion-select-option>
+        <ion-select-option value="Masculino">Masculino</ion-select-option>
+        <ion-select-option value="Femenino">Femenino</ion-select-option>
+        <ion-select-option value="Prefiero no contestar">Prefiero no contestar</ion-select-option>
       </ion-select>
     </ion-item>
     

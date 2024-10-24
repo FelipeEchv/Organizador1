@@ -1,12 +1,6 @@
 import { Component } from '@angular/core';
 import { AlertController } from '@ionic/angular';
-
-interface Tarea {
-  titulo: string;
-  contenido: string;
-  fecha: string; // La fecha será una cadena en formato 'YYYY-MM-DD'
-  prioridad: 'Bajo' | 'Medio' | 'Alto'; // Prioridad como texto
-}
+import { TareaService } from '../services/tarea.service';
 
 @Component({
   selector: 'app-tareas',
@@ -14,117 +8,82 @@ interface Tarea {
   styleUrls: ['./tareas.page.scss'],
 })
 export class TareasPage {
-  tareas: Tarea[] = [];
+  tareas: any[] = [];
 
-  constructor(private alertController: AlertController) {}
+  constructor(private alertController: AlertController, private tareaService: TareaService) {
+    this.cargarTareas();
+  }
 
+  // Cargar todas las tareas
+  cargarTareas() {
+    this.tareaService.getTareas().subscribe(tareas => {
+      this.tareas = tareas;
+    });
+  }
+
+  // Agregar una nueva tarea
   async agregarTarea() {
     const alert = await this.alertController.create({
       header: 'Nueva Tarea',
       inputs: [
-        {
-          name: 'titulo',
-          type: 'text',
-          placeholder: 'Título'
-        },
-        {
-          name: 'contenido',
-          type: 'text',
-          placeholder: 'Contenido'
-        },
-        {
-          name: 'fecha',
-          type: 'date',
-          placeholder: 'Fecha'
-        },
-        {
-          name: 'prioridad',
-          type: 'text',
-          placeholder: 'Prioridad (Bajo, Medio, Alto)',
-          value: '' // Valor por defecto
-        }
+        { name: 'titulo', type: 'text', placeholder: 'Título' },
+        { name: 'contenido', type: 'text', placeholder: 'Contenido' },
+        { name: 'fecha', type: 'date', placeholder: 'Fecha' },
+        { name: 'prioridad', type: 'number', placeholder: 'Prioridad' }
       ],
       buttons: [
-        {
-          text: 'Cancelar',
-          role: 'cancel',
-        },
-        {
-          text: 'Agregar',
-          handler: (data: any) => {
-            const prioridades = ['Bajo', 'Medio', 'Alto'];
-            if (data.titulo && data.contenido && data.fecha && prioridades.includes(data.prioridad)) {
-              this.tareas.push({
-                titulo: data.titulo,
-                contenido: data.contenido,
-                fecha: data.fecha,
-                prioridad: data.prioridad
-              });
-            }
+        { text: 'Cancelar', role: 'cancel' },
+        { text: 'Agregar', handler: (data) => {
+            const nuevaTarea = {
+              titulo: data.titulo,
+              contenido: data.contenido,
+              fecha: data.fecha,
+              prioridad: data.prioridad
+            };
+            this.tareaService.agregarTarea(nuevaTarea).subscribe(() => {
+              this.cargarTareas(); // Recargar las tareas
+            });
           }
         }
       ]
     });
-
     await alert.present();
   }
 
-  async editarTarea(tarea: Tarea) {
+  // Editar una tarea existente
+  async editarTarea(tarea: any) {
     const alert = await this.alertController.create({
       header: 'Editar Tarea',
       inputs: [
-        {
-          name: 'titulo',
-          type: 'text',
-          value: tarea.titulo,
-          placeholder: 'Título'
-        },
-        {
-          name: 'contenido',
-          type: 'text',
-          value: tarea.contenido,
-          placeholder: 'Contenido'
-        },
-        {
-          name: 'fecha',
-          type: 'date',
-          value: tarea.fecha,
-          placeholder: 'Fecha'
-        },
-        {
-          name: 'prioridad',
-          type: 'text',
-          value: tarea.prioridad,
-          placeholder: 'Prioridad (Bajo, Medio, Alto)'
-        }
+        { name: 'titulo', type: 'text', value: tarea.titulo, placeholder: 'Título' },
+        { name: 'contenido', type: 'text', value: tarea.contenido, placeholder: 'Contenido' },
+        { name: 'fecha', type: 'date', value: tarea.fecha, placeholder: 'Fecha' },
+        { name: 'prioridad', type: 'number', value: tarea.prioridad, placeholder: 'Prioridad' }
       ],
       buttons: [
-        {
-          text: 'Cancelar',
-          role: 'cancel',
-        },
-        {
-          text: 'Guardar',
-          handler: (data: any) => {
-            const prioridades = ['Bajo', 'Medio', 'Alto'];
-            if (data.titulo && data.contenido && data.fecha && prioridades.includes(data.prioridad)) {
-              tarea.titulo = data.titulo;
-              tarea.contenido = data.contenido;
-              tarea.fecha = data.fecha;
-              tarea.prioridad = data.prioridad;
-            }
+        { text: 'Cancelar', role: 'cancel' },
+        { text: 'Guardar', handler: (data) => {
+            const tareaActualizada = {
+              ...tarea,
+              titulo: data.titulo,
+              contenido: data.contenido,
+              fecha: data.fecha,
+              prioridad: data.prioridad
+            };
+            this.tareaService.editarTarea(tarea.id, tareaActualizada).subscribe(() => {
+              this.cargarTareas(); // Recargar las tareas
+            });
           }
         }
       ]
     });
-
     await alert.present();
   }
 
-  eliminarTarea(tarea: Tarea) {
-    const index = this.tareas.indexOf(tarea);
-    if (index > -1) {
-      this.tareas.splice(index, 1);
-    }
+  // Eliminar una tarea
+  eliminarTarea(tarea: any) {
+    this.tareaService.eliminarTarea(tarea.id).subscribe(() => {
+      this.cargarTareas(); // Recargar las tareas
+    });
   }
 }

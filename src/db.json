@@ -1,0 +1,46 @@
+{
+  "usuarios": [
+    {
+      "id": "1",
+      "nombreUsuario": "FelipeE",
+      "password": "Duoc2024",
+      "edad": 25,
+      "correo": "felipe@gmail.cl",
+      "sexo": "Masculino"
+    },
+    {
+      "id": "2",
+      "nombreUsuario": "IgnacioM",
+      "password": "Duoc2024",
+      "edad": 22,
+      "correo": "ignacio@gmail.cl",
+      "sexo": "Masculino"
+    },
+    {
+      "id": "03d4",
+      "nombreUsuario": "mateo",
+      "password": "mateo",
+      "edad": 21,
+      "correo": "mateo@gmail.com",
+      "sexo": "hombre"
+    }
+  ],
+  "contactos": [
+    {
+      "id": "e1d7",
+      "nombre": "dasdsad1111",
+      "telefono": "asdsad",
+      "direccion": "asdd",
+      "correo": "sadasdasdasdasdas"
+    }
+  ],
+  "notas": [
+    {
+      "id": "6ca5",
+      "titulo": "dsadsa",
+      "contenido": "dsadsa",
+      "fecha": "2024-10-24T05:10:08.027Z"
+    }
+  ],
+  "tareas": []
+}

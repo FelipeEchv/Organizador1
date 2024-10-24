@@ -13,11 +13,12 @@ import { provideAnimationsAsync } from '@angular/platform-browser/animations/asy
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 
 import { FormsModule } from '@angular/forms'; 
+import { HttpClientModule } from '@angular/common/http';
 
 
 @NgModule({
   declarations: [AppComponent],
-  imports: [BrowserModule, IonicModule.forRoot(), AppRoutingModule, MatButtonModule, MatProgressBarModule, FormsModule], 
+  imports: [HttpClientModule, BrowserModule, IonicModule.forRoot(), AppRoutingModule, MatButtonModule, MatProgressBarModule, FormsModule], 
   providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy }, provideAnimationsAsync()],
   bootstrap: [AppComponent],
 })

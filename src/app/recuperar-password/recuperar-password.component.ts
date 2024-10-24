@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { ModalController } from '@ionic/angular';
+import { UsuarioService } from '../services/usuario.service';
 
 @Component({
   selector: 'app-recuperar-password',
@@ -10,18 +11,20 @@ export class RecuperarPasswordComponent {
   usuario: string = '';
   email: string = '';
 
-  constructor(private modalController: ModalController) {}
+  constructor(private modalController: ModalController, private usuarioService: UsuarioService) {}
 
   close() {
     this.modalController.dismiss();
   }
 
   recuperar() {
-    if (this.emailValido()) {
+    // Verificar si el email pertenece a un usuario registrado
+    const user = this.usuarioService.buscarUsuarioPorCorreo(this.email);
+    if (user) {
       alert('Se ha enviado un enlace para recuperar la contraseña a ' + this.email);
       this.close();
     } else {
-      alert('Por favor, introduzca un correo electrónico válido.');
+      alert('Correo no registrado. Por favor, introduzca un correo electrónico válido.');
     }
   }
 
