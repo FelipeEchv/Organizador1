@@ -1,0 +1,17 @@
+{
+	"appId": "io.ionic.starter",
+	"appName": "organizador",
+	"webDir": "www",
+	"server": {
+		"androidScheme": "http",
+		"cleartext": true,
+		"allowNavigation": [
+			"192.168.100.9"
+		]
+	},
+	"plugins": {
+		"SQLite": {
+			"iosDatabaseLocation": "library/Databases"
+		}
+	}
+}
