@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ToastController } from '@ionic/angular';
 
+
 @Component({
   selector: 'app-bienvenida',
   templateUrl: './bienvenida.page.html',
@@ -9,12 +10,21 @@ import { ToastController } from '@ionic/angular';
 })
 export class BienvenidaPage implements OnInit {
   nombreUsuario: string = 'Invitado';
+  mapa: any;;
+
 
   constructor(private router: Router, private toastController: ToastController) {}
 
   ngOnInit() {
     this.nombreUsuario = localStorage.getItem('usuario') || 'Invitado';
   }
+
+  
+    
+
+  
+
+
 
   async logout() {
     try {

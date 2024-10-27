@@ -1,21 +1,23 @@
-import { Component } from '@angular/core';
+import { Component, AfterViewInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ModalController, ToastController } from '@ionic/angular';
 import { RecuperarPasswordComponent } from '../recuperar-password/recuperar-password.component';
 import { UsuarioService } from '../services/usuario.service';
+import * as L from 'leaflet';
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.page.html',
   styleUrls: ['./login.page.scss'],
 })
-export class LoginPage {
+export class LoginPage implements AfterViewInit {
   rating: number = 0; // Calificación seleccionada
   hoveredRating: number = 0; // Calificación mientras se pasa el mouse
   mensajeVisible: boolean = false; // Mostrar mensaje de agradecimiento por 3 segundos
   isLoading: boolean = false; // Controla la visibilidad de la barra de progreso
   usuario: string = ''; // Campo para el nombre de usuario
   password: string = ''; // Campo para la contraseña
+  private map!: L.Map;
 
   constructor(
     private router: Router,
@@ -23,6 +25,23 @@ export class LoginPage {
     private usuarioService: UsuarioService,
     private toastController: ToastController // Para mostrar mensajes toast
   ) {}
+
+
+  ngAfterViewInit() {
+    this.initializeMap();
+  }
+
+  private initializeMap() {
+    this.map = L.map('map').setView([-33.36332348407657, -70.67822811987129], 15);
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 19,
+    }).addTo(this.map);
+
+    L.marker([-33.36332348407657, -70.67822811987129]).addTo(this.map)
+      .bindPopup('Oficina de BigNote!')
+      .openPopup();
+  }
 
 
   // Método para autenticar al usuario

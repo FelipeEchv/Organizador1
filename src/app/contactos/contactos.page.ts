@@ -129,7 +129,7 @@ export class ContactosPage {
     }
 
     if (!telefonoRegex.test(data.telefono) || data.telefono.length > 10) {
-      this.errorTelefono = 'El teléfono debe contener solo números y tener un máximo de 10 dígitos.';
+      this.errorTelefono = 'El teléfono debe contener solo números y tener mínimo 8 y máximo 10 dígitos.';
       esValido = false;
     }
 
