@@ -3,20 +3,28 @@
     <ion-title>Contactos</ion-title>
   </ion-toolbar>
 </ion-header>
- 
+
 <ion-content class="ion-padding">
   <ion-button expand="full" (click)="agregarContacto()">Añadir Contacto</ion-button>
-  
-    <ion-item *ngFor="let contacto of contactos">
-      <ion-label>
-        <h2>{{ contacto.nombre }}</h2>
-        <p><strong>Teléfono:</strong> {{ contacto.telefono }}</p>
-        <p><strong>Dirección:</strong> {{ contacto.direccion }}</p>
-        <p><strong>Correo:</strong> {{ contacto.correo }}</p>
-      </ion-label>
-      <ion-button (click)="editarContacto(contacto)" fill="clear">Editar</ion-button>
-      <ion-button (click)="eliminarContacto(contacto)" fill="clear">Eliminar</ion-button>
-    </ion-item>
 
+  <!-- Mensajes de error para cada campo -->
+  <div *ngIf="errorNombre" class="error-message">{{ errorNombre }}</div>
+  <div *ngIf="errorTelefono" class="error-message">{{ errorTelefono }}</div>
+  <div *ngIf="errorDireccion" class="error-message">{{ errorDireccion }}</div>
+  <div *ngIf="errorCorreo" class="error-message">{{ errorCorreo }}</div>
+
+  
+  <ion-item *ngFor="let contacto of contactos">
+    <ion-label>
+      <h2>{{ contacto.nombre }}</h2>
+      <p><strong>Teléfono:</strong> {{ contacto.telefono }}</p>
+      <p><strong>Dirección:</strong> {{ contacto.direccion }}</p>
+      <p><strong>Correo:</strong> {{ contacto.correo }}</p>
+    </ion-label>
+    <ion-button (click)="editarContacto(contacto)" fill="clear">Editar</ion-button>
+    <ion-button (click)="eliminarContacto(contacto)" fill="clear">Eliminar</ion-button>
+  </ion-item>
+
+  
   <ion-button expand="full" routerLink="/bienvenida">Volver a Inicio</ion-button>
 </ion-content>

@@ -8,6 +8,10 @@
   <!-- Botón para agregar notas -->
   <ion-button expand="full" (click)="agregarNota()">Añadir Nota</ion-button>
 
+  <!-- Mensajes de error para cada campo -->
+  <div *ngIf="errorTitulo" class="error-message">{{ errorTitulo }}</div>
+  <div *ngIf="errorContenido" class="error-message">{{ errorContenido }}</div>
+
   <ion-item *ngFor="let nota of notas">
     <ion-label>
       <h2>{{ nota.titulo }}</h2>

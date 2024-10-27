@@ -8,39 +8,35 @@
   <form (ngSubmit)="registrar()" #registroForm="ngForm">
     
     <!-- Nombre Completo -->
-    <ion-label position="floating">Nombre Completo</ion-label>
-    <ion-item>   
-      <ion-input id="nombre" type="text" [(ngModel)]="nombreUsuario" name="nombre" required></ion-input>
+    <ion-item>
+      <ion-label position="floating">Nombre Completo</ion-label>
+      <ion-input type="text" [(ngModel)]="nombreUsuario" name="nombre" required></ion-input>
     </ion-item>
-    <!-- Mensaje de error para Nombre -->
-    <p id="error-nombre" style="color: red; font-size: 12px; display: none;">El nombre solo puede contener letras y no puede estar vacío.</p>
+    <div *ngIf="errorNombre" class="error-message">{{ errorNombre }}</div>
 
     <!-- Contraseña -->
-    <ion-label position="floating">Contraseña</ion-label>
     <ion-item>
-      <ion-input id="password" type="password" [(ngModel)]="password" name="password" required></ion-input>
+      <ion-label position="floating">Contraseña</ion-label>
+      <ion-input type="password" [(ngModel)]="password" name="password" required></ion-input>
     </ion-item>
-    <!-- Mensaje de error para Contraseña -->
-    <p id="error-password" style="color: red; font-size: 12px; display: none;">La contraseña debe tener al menos 8 caracteres, una letra mayúscula y un número.</p>
+    <div *ngIf="errorPassword" class="error-message">{{ errorPassword }}</div>
     
-    <!-- Correo Electrónico -->
-    <ion-label position="floating">Correo Electrónico</ion-label>
-    <ion-item>
-      <ion-input id="correo" type="email" [(ngModel)]="correo" name="correo" required></ion-input>
-    </ion-item>
-    <!-- Mensaje de error para Correo -->
-    <p id="error-correo" style="color: red; font-size: 12px; display: none;">El formato de correo no es válido y no puede estar vacío.</p>
-
     <!-- Edad -->
-    <ion-label position="floating">Edad</ion-label>
-    <ion-item class="label1">
-      <ion-input id="edad" type="number" [(ngModel)]="edad" name="edad" required></ion-input>
+    <ion-item>
+      <ion-label position="floating">Edad</ion-label>
+      <ion-input type="number" [(ngModel)]="edad" name="edad" required></ion-input>
     </ion-item>
-    <!-- Mensaje de error para Edad -->
-    <p id="error-edad" style="color: red; font-size: 12px; display: none;">La edad debe ser un número de hasta 2 dígitos y no puede estar vacío.</p>
+    <div *ngIf="errorEdad" class="error-message">{{ errorEdad }}</div>
+
+    <!-- Correo Electrónico -->
+    <ion-item>
+      <ion-label position="floating">Correo Electrónico</ion-label>
+      <ion-input type="email" [(ngModel)]="correo" name="correo" required></ion-input>
+    </ion-item>
+    <div *ngIf="errorCorreo" class="error-message">{{ errorCorreo }}</div>
 
     <!-- Sexo -->
-    <ion-item class="label1">
+    <ion-item>
       <ion-label>Sexo</ion-label>
       <ion-select [(ngModel)]="sexo" name="sexo" required>
         <ion-select-option value="Masculino">Masculino</ion-select-option>
@@ -48,11 +44,10 @@
         <ion-select-option value="Prefiero no contestar">Prefiero no contestar</ion-select-option>
       </ion-select>
     </ion-item>
-    
-    <!-- Botón de Registro -->
-    <ion-button expand="end" type="submit" [disabled]="!registroForm.form.valid">Registrarse</ion-button>
+    <div *ngIf="errorSexo" class="error-message">{{ errorSexo }}</div>
 
-    <ion-button expand="end" routerLink="/login">Cancelar</ion-button>
-    
+    <!-- Botón de Registro -->
+    <ion-button expand="full" type="submit" [disabled]="!registroForm.form.valid">Registrarse</ion-button>
+    <ion-button expand="full" routerLink="/login">Cancelar</ion-button>
   </form>
 </ion-content>

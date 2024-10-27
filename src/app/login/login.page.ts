@@ -24,27 +24,28 @@ export class LoginPage {
     private toastController: ToastController // Para mostrar mensajes toast
   ) {}
 
+
   // Método para autenticar al usuario
   async login() {
-    this.isLoading = true; // Mostrar la barra de progreso
-    // Llamamos al servicio de login
-    this.usuarioService.login(this.usuario, this.password).subscribe(
-      async (usuarios) => {
-        this.isLoading = false; // Ocultar la barra de progreso
+    this.isLoading = true;
+    this.usuarioService.login(this.usuario, this.password).subscribe({
+      next: async (usuarios) => {
+        this.isLoading = false;
         if (usuarios.length > 0) {
-          await this.presentToast('Inicio de sesión exitoso', 'success'); // Mostrar mensaje de éxito
-          localStorage.setItem('usuario', this.usuario); // Guardar al usuario en localStorage
-          this.router.navigate(['/bienvenida']); // Navegar a la página de bienvenida
+          localStorage.setItem('usuario', this.usuario);
+          await this.presentToast('Inicio de sesión exitoso', 'success');
+          this.router.navigate(['/bienvenida']);
         } else {
-          await this.presentToast('Credenciales incorrectas. Inténtalo de nuevo.', 'danger'); // Mostrar mensaje de error
+          await this.presentToast('Credenciales incorrectas', 'danger');
         }
       },
-      async (error) => {
+      error: async () => {
         this.isLoading = false;
-        await this.presentToast('Error al iniciar sesión. Inténtalo de nuevo más tarde.', 'danger');
-      }
-    );
+        await this.presentToast('Error al iniciar sesión', 'danger');
+      },
+    });
   }
+
 
   validarPassword(password: string): boolean {
     const regex = /^(?=.*[A-Z])(?=.*[0-9]{4})(?=.*[a-zA-Z]{3}).{8}$/;

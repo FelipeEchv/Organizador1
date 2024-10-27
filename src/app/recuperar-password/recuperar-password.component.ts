@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { ModalController } from '@ionic/angular';
+import { ModalController, ToastController } from '@ionic/angular';
 import { UsuarioService } from '../services/usuario.service';
 
 @Component({
@@ -11,25 +11,55 @@ export class RecuperarPasswordComponent {
   usuario: string = '';
   email: string = '';
 
-  constructor(private modalController: ModalController, private usuarioService: UsuarioService) {}
+  constructor(
+    private modalController: ModalController,
+    private usuarioService: UsuarioService,
+    private toastController: ToastController
+  ) {}
 
   close() {
     this.modalController.dismiss();
   }
 
-  recuperar() {
-    // Verificar si el email pertenece a un usuario registrado
-    const user = this.usuarioService.buscarUsuarioPorCorreo(this.email);
-    if (user) {
-      alert('Se ha enviado un enlace para recuperar la contraseña a ' + this.email);
-      this.close();
+  async recuperar() {
+    if (this.validarFormulario()) {
+      this.usuarioService.buscarUsuarioPorCorreo(this.email).subscribe({
+        next: async (usuarios) => {
+          if (usuarios.length > 0) {
+            await this.presentToast(`Se ha enviado un enlace a ${this.email}`, 'success');
+            this.close();
+          } else {
+            await this.presentToast('Correo no registrado', 'danger');
+          }
+        },
+        error: async () => {
+          await this.presentToast('Error al buscar usuario', 'danger');
+        },
+      });
     } else {
-      alert('Correo no registrado. Por favor, introduzca un correo electrónico válido.');
+      await this.presentToast('Completa todos los campos correctamente', 'danger');
     }
   }
 
   emailValido(): boolean {
-    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Expresión regular para validar email
-    return regex.test(this.email);
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(this.email);
+  }
+
+  validarFormulario(): boolean {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const usuarioValido = this.usuario.trim().length > 0;
+    const emailValido = emailRegex.test(this.email);
+    return usuarioValido && emailValido;
+  }
+
+  async presentToast(message: string, color: string) {
+    const toast = await this.toastController.create({
+      message,
+      duration: 2000,
+      color,
+      position: 'bottom',
+    });
+    await toast.present();
   }
 }

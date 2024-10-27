@@ -23,23 +23,23 @@
       "edad": 21,
       "correo": "mateo@gmail.com",
       "sexo": "hombre"
-    }
-  ],
-  "contactos": [
+    },
     {
-      "id": "e1d7",
-      "nombre": "dasdsad1111",
-      "telefono": "asdsad",
-      "direccion": "asdd",
-      "correo": "sadasdasdasdasdas"
+      "id": "9738",
+      "nombreUsuario": "djjsjwj",
+      "password": "ewjwwj",
+      "edad": 22,
+      "correo": "wjjsjsj",
+      "sexo": "Femenino"
     }
   ],
+  "contactos": [],
   "notas": [
     {
-      "id": "6ca5",
-      "titulo": "dsadsa",
-      "contenido": "dsadsa",
-      "fecha": "2024-10-24T05:10:08.027Z"
+      "id": "32f6",
+      "titulo": "dsadads",
+      "contenido": "dsada",
+      "fecha": "2024-10-27T15:15:16.732Z"
     }
   ],
   "tareas": []

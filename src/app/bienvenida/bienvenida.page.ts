@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { ToastController } from '@ionic/angular';
 
 @Component({
   selector: 'app-bienvenida',
@@ -9,15 +10,29 @@ import { Router } from '@angular/router';
 export class BienvenidaPage implements OnInit {
   nombreUsuario: string = 'Invitado';
 
-  constructor(private router: Router) {}
+  constructor(private router: Router, private toastController: ToastController) {}
 
   ngOnInit() {
-    // Obtiene el nombre del usuario desde localStorage
     this.nombreUsuario = localStorage.getItem('usuario') || 'Invitado';
   }
 
-  logout() {
-    localStorage.removeItem('usuario');
-    this.router.navigate(['/login']);
+  async logout() {
+    try {
+      localStorage.removeItem('usuario');
+      await this.router.navigate(['/login']);
+      this.presentToast('Sesión cerrada correctamente', 'success');
+    } catch (error) {
+      this.presentToast('Error al cerrar sesión', 'danger');
+    }
+  }
+
+  async presentToast(message: string, color: string) {
+    const toast = await this.toastController.create({
+      message,
+      duration: 2000,
+      color,
+      position: 'bottom',
+    });
+    toast.present();
   }
 }

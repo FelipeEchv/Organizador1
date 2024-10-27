@@ -1,4 +1,4 @@
-#Thu Oct 24 22:28:13 CLST 2024
+#Fri Oct 25 03:00:04 CLST 2024
 base.0=C\:\\Users\\feech\\ProyectosApp\\Organizador1\\android\\app\\build\\intermediates\\dex\\debug\\mergeExtDexDebug\\classes.dex
 base.1=C\:\\Users\\feech\\ProyectosApp\\Organizador1\\android\\app\\build\\intermediates\\dex\\debug\\mergeLibDexDebug\\12\\classes.dex
 base.10=C\:\\Users\\feech\\ProyectosApp\\Organizador1\\android\\app\\build\\intermediates\\dex\\debug\\mergeProjectDexDebug\\7\\classes.dex
