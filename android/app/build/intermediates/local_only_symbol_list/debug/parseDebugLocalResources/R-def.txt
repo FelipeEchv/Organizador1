@@ -1,10 +1,14 @@
 R_DEF: Internal format may change without notice
 local
 color ic_launcher_background
+drawable ic_bignote_background
 drawable ic_launcher_background
 drawable ic_launcher_foreground
 drawable splash
 layout activity_main
+mipmap ic_bignote
+mipmap ic_bignote_foreground
+mipmap ic_bignote_round
 mipmap ic_launcher
 mipmap ic_launcher_foreground
 mipmap ic_launcher_round

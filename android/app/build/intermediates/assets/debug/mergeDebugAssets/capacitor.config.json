@@ -1,6 +1,6 @@
 {
 	"appId": "io.ionic.starter",
-	"appName": "organizador",
+	"appName": "BigNote",
 	"webDir": "www",
 	"server": {
 		"androidScheme": "http",

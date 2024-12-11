@@ -655,6 +655,7 @@ drawable compat_splash_screen
 drawable compat_splash_screen_no_icon_background
 drawable fingerprint_dialog_error
 drawable fingerprint_dialog_fp_icon
+drawable ic_bignote_background
 drawable ic_call_answer
 drawable ic_call_answer_low
 drawable ic_call_answer_video
@@ -939,6 +940,9 @@ layout select_dialog_multichoice_material
 layout select_dialog_singlechoice_material
 layout splash_screen_view
 layout support_simple_spinner_dropdown_item
+mipmap ic_bignote
+mipmap ic_bignote_foreground
+mipmap ic_bignote_round
 mipmap ic_launcher
 mipmap ic_launcher_foreground
 mipmap ic_launcher_round

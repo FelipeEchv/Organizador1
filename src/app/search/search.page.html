@@ -1,0 +1,29 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title style="color: white;">Búsqueda</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-searchbar
+    placeholder="Buscar en Internet..."
+    [(ngModel)]="query"
+    (keyup.enter)="onSearch()">
+  </ion-searchbar>
+
+  <ion-button expand="block" (click)="onSearch()">Buscar</ion-button>
+  <ion-button expand="block" routerLink="/bienvenida">Volver a Inicio</ion-button>
+
+  <ion-list *ngIf="results.length > 0">
+    <ion-item *ngFor="let result of results">
+      <ion-label>
+        <h3>{{ result.Text }}</h3>
+        <a href="{{ result.FirstURL }}" target="_blank" rel="noopener noreferrer">
+          Abrir enlace
+        </a>
+      </ion-label>
+    </ion-item>
+  </ion-list>
+
+  <p *ngIf="results.length === 0 && query">No se encontraron resultados.</p>
+</ion-content>
